@@ -13,7 +13,7 @@
 
 	<artifactId>cat-core</artifactId>
 
-	<name>Classloader Analysis Tool</name>
+	<name>Classloader Analysis Tool Core</name>
 	<url>http://maven.apache.org</url>
 
 	<dependencies>

@@ -33,19 +33,21 @@ public class ClassloaderAnalysisTool {
             parent = process(pcl);
         }
 
+        String id = Integer.toString(MAX_ID++);
         // 使用扩展分析器进行分析
         ServiceLoader<ExtendAnalyzer> serviceloader = ServiceLoader.load(
                 ExtendAnalyzer.class, Thread.currentThread()
                         .getContextClassLoader());
         for (ExtendAnalyzer analyzer : serviceloader) {
-            node = analyzer.process(Integer.toString(MAX_ID++), parent,
-                    classloader);
+            node = analyzer.process(id, parent, classloader);
             if (node != null)
-                return node;
+                break;
         }
 
-        // 默认分析
-        node = new BaseCLNode(Integer.toString(MAX_ID++), parent, classloader);
+        if (node == null) {
+            // 默认分析
+            node = new BaseCLNode(id, parent, classloader);
+        }
 
         if (parent != null && parent instanceof BaseCLNode) {
             BaseCLNode bnode = ((BaseCLNode) parent);

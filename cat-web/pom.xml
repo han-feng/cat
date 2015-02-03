@@ -14,7 +14,7 @@
 	<artifactId>cat-web</artifactId>
 	<packaging>war</packaging>
 
-	<name>Classloader Analysis Tool</name>
+	<name>Classloader Analysis Tool Web</name>
 	<url>http://maven.apache.org</url>
 
 	<properties>
