@@ -18,6 +18,13 @@ public interface CLNode {
     public String getId();
 
     /**
+     * 获取描述信息
+     * 
+     * @return
+     */
+    public String getDescription();
+
+    /**
      * 获取节点类型，取值为对应ClassLoader的className
      * 
      * @return
@@ -60,11 +67,25 @@ public interface CLNode {
     public CLNode[] getChildren();
 
     /**
-     * 获取该节点管理的classpath路径
+     * 获取该节点管理的classpath
      * 
      * @return
      */
     public String[] getClasspath();
+
+    /**
+     * 获取标签集
+     * 
+     * @return
+     */
+    public String[] getTags();
+
+    /**
+     * 添加标签
+     * 
+     * @param tag
+     */
+    public void addTag(String tag);
 
     /**
      * 获取扩展属性

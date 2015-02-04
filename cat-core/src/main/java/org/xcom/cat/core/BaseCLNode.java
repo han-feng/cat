@@ -1,5 +1,6 @@
 package org.xcom.cat.core;
 
+import java.io.Serializable;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
@@ -10,20 +11,25 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class BaseCLNode implements CLNode {
+public class BaseCLNode implements CLNode, Serializable {
+
+    private static final long serialVersionUID = -2758132972451801019L;
 
     protected static int MAX_ID = 0;
 
-    protected String id;
-    protected String type;
-    protected CLNode parent;
-    protected ClassLoader classLoader;
-    protected Set<CLNode> children = new HashSet<CLNode>();
-    protected List<String> classpath = new ArrayList<String>();
     protected Map<String, Object> attributes = new ConcurrentHashMap<String, Object>();
+    protected Set<CLNode> children = new HashSet<CLNode>();
+    protected transient ClassLoader classLoader;
+    protected List<String> classpath = new ArrayList<String>();
+    protected String description;
+    protected String id;
+    protected CLNode parent;
+    protected Set<String> tags = new HashSet<String>();
+    protected String type;
 
     protected BaseCLNode(String id, CLNode parent, ClassLoader classloader) {
         this.id = id;
+        this.description = classloader.toString();
         this.classLoader = classloader;
         this.type = classloader.getClass().getName();
         this.parent = parent;
@@ -38,20 +44,42 @@ public class BaseCLNode implements CLNode {
         }
     }
 
-    public String getId() {
-        return id;
+    @Override
+    public void addTag(String tag) {
+        if (tag != null) {
+            tag = tag.trim();
+            if (!tag.equals(""))
+                tags.add(tag);
+        }
     }
 
-    public String getType() {
-        return type;
+    public Map<String, Object> getAttribute() {
+        return Collections.unmodifiableMap(attributes);
     }
 
-    public CLNode getParent() {
-        return parent;
+    public CLNode[] getChildren() {
+        return (CLNode[]) children.toArray(new CLNode[children.size()]);
     }
 
     public ClassLoader getClassLoader() {
         return classLoader;
+    }
+
+    public String[] getClasspath() {
+        return (String[]) classpath.toArray(new String[classpath.size()]);
+    }
+
+    @Override
+    public String getDescription() {
+        return description;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public CLNode getParent() {
+        return parent;
     }
 
     public CLNode getRoot() {
@@ -61,16 +89,13 @@ public class BaseCLNode implements CLNode {
             return getParent().getRoot();
     }
 
-    public CLNode[] getChildren() {
-        return (CLNode[]) children.toArray(new CLNode[children.size()]);
+    @Override
+    public String[] getTags() {
+        return (String[]) tags.toArray(new String[tags.size()]);
     }
 
-    public String[] getClasspath() {
-        return (String[]) classpath.toArray(new String[classpath.size()]);
-    }
-
-    public Map<String, Object> getAttribute() {
-        return Collections.unmodifiableMap(attributes);
+    public String getType() {
+        return type;
     }
 
     public boolean isRoot() {

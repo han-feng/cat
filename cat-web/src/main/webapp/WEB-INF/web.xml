@@ -5,6 +5,15 @@
 
 	<display-name>Classloader Analysis Tool - WebTest</display-name>
 
+	<filter>
+		<filter-name>catfilter</filter-name>
+		<filter-class>org.xcom.cat.web.CATFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>catfilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
 	<welcome-file-list>
 		<welcome-file>cat_index.jsp</welcome-file>
 	</welcome-file-list>

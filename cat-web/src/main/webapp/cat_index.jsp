@@ -8,9 +8,9 @@
 			response.setHeader("Cache-Control", "no-cache");
 			response.setDateHeader("Expires", 0);
 
-			ClassloaderAnalysisTool.process(this.getClass().getClassLoader());
-			ClassloaderAnalysisTool.process(Thread.currentThread()
-					.getContextClassLoader());
+			ClassloaderAnalysisTool.process(this.getClass().getClassLoader(),
+					"JSP.class");
+			ClassloaderAnalysisTool.process("JSP.serviceThread");
 			Collection roots = ClassloaderAnalysisTool.getRoots();
 %>
 <%!//
@@ -23,18 +23,21 @@
 		out.print("<tr><th");
 		if (size > 1)
 			out.print(" colspan='" + size + "'");
-		out.print(">");
+		out.print("><span class=\"title\">");
 		out.print(node.getType());
 		String[] urls = node.getClasspath();
 		int urlsize = urls.length;
-		out.print(" &nbsp; <a href=\"javascript:displayNode('node_urls_"
+		out.print("</span>&nbsp;" + Arrays.toString(node.getTags())
+				+ "&nbsp;<a href=\"javascript:displayNode('node_urls_"
 				+ node.getId() + "')\">详细信息</a>");
-		out.println("<ol id='node_urls_" + node.getId()
-				+ "' style='display: none;'>");
+		out.println("<div id=\"node_urls_" + node.getId()
+				+ "\" style=\"display: none;\">" + node.getDescription());
+		out.println("<ol>");
 		for (int i = 0; i < urlsize; i++) {
 			out.println("<li>" + urls[i] + "</li>");
 		}
 		out.print("</ol>");
+		out.println("</div>");
 		out.println("</th></tr>");
 
 		if (size > 0) {
@@ -67,10 +70,16 @@ th {
 	text-align: left;
 	border: 1px solid black;
 	padding: 5px;
+	font-weight: normal;
 }
 
 td {
-	padding: 20px 5px;
+	padding: 20px 10px 0 0;
+	vertical-align: top;
+}
+
+.title {
+	font-weight: bold;
 }
 </style>
 <script type="text/javascript">

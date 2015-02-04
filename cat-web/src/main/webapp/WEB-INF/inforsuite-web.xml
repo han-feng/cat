@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<inforsuite-web-app>
+
+	<class-loader delegate="true" />
+
+	<locale-charset-info>
+		<parameter-encoding default-charset="UTF-8" />
+	</locale-charset-info>
+
+</inforsuite-web-app>

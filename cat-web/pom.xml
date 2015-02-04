@@ -37,9 +37,23 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
+			<groupId>javax.ejb</groupId>
+			<artifactId>ejb-api</artifactId>
+			<version>3.0</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
 			<groupId>org.xcom</groupId>
 			<artifactId>cat-core</artifactId>
 			<version>${project.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.xcom</groupId>
+			<artifactId>cat-ejb</artifactId>
+			<version>${project.version}</version>
+			<type>ejb</type>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
@@ -54,6 +68,19 @@
 				<groupId>org.eclipse.jetty</groupId>
 				<artifactId>jetty-maven-plugin</artifactId>
 				<version>${jetty.version}</version>
+				<dependencies>
+					<dependency>
+						<groupId>org.xcom</groupId>
+						<artifactId>cat-core</artifactId>
+						<version>${project.version}</version>
+					</dependency>
+					<dependency>
+						<groupId>org.xcom</groupId>
+						<artifactId>cat-ejb</artifactId>
+						<version>${project.version}</version>
+						<type>ejb</type>
+					</dependency>
+				</dependencies>
 				<configuration>
 					<httpConnector>
 						<port>${webserver.port}</port>
@@ -73,6 +100,13 @@
 				<groupId>org.apache.tomcat.maven</groupId>
 				<artifactId>tomcat7-maven-plugin</artifactId>
 				<version>${tomcat.version}</version>
+				<dependencies>
+					<dependency>
+						<groupId>org.xcom</groupId>
+						<artifactId>cat-core</artifactId>
+						<version>${project.version}</version>
+					</dependency>
+				</dependencies>
 				<configuration>
 					<port>${webserver.port}</port>
 					<path>/</path>
