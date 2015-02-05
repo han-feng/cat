@@ -52,8 +52,7 @@
 			<groupId>org.xcom</groupId>
 			<artifactId>cat-ejb</artifactId>
 			<version>${project.version}</version>
-			<type>ejb</type>
-			<scope>provided</scope>
+			<type>ejb-client</type>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
@@ -78,7 +77,7 @@
 						<groupId>org.xcom</groupId>
 						<artifactId>cat-ejb</artifactId>
 						<version>${project.version}</version>
-						<type>ejb</type>
+						<type>ejb-client</type>
 					</dependency>
 				</dependencies>
 				<configuration>
@@ -105,6 +104,12 @@
 						<groupId>org.xcom</groupId>
 						<artifactId>cat-core</artifactId>
 						<version>${project.version}</version>
+					</dependency>
+					<dependency>
+						<groupId>org.xcom</groupId>
+						<artifactId>cat-ejb</artifactId>
+						<version>${project.version}</version>
+						<type>ejb-client</type>
 					</dependency>
 				</dependencies>
 				<configuration>

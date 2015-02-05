@@ -41,6 +41,7 @@
 				<version>2.5</version>
 				<configuration>
 					<ejbVersion>3.0</ejbVersion>
+					<generateClient>true</generateClient>
 				</configuration>
 			</plugin>
 		</plugins>
