@@ -3,6 +3,8 @@ package org.xcom.cat.web;
 import java.io.IOException;
 
 import javax.ejb.EJB;
+import javax.naming.InitialContext;
+import javax.rmi.PortableRemoteObject;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -24,8 +26,33 @@ public class CATFilter implements Filter {
                 "Servlet.class");
         ClassloaderAnalysisTool.process("Servlet.initThread");
 
-        if (cat != null)
+        // EJB3
+        if (cat != null) {
             cat.process();
+            System.out.println("############ EJB3 CAT OK !");
+        } else {
+            System.out.println("############ EJB3 CAT not found !");
+
+        }
+
+        // EJB2
+        InitialContext ctx;
+        try {
+            ctx = new InitialContext();
+            Object objRef = ctx.lookup("CATBean2");
+            if (objRef != null) {
+                org.xcom.cat.ejb2.CATBeanRemoteHome home = (org.xcom.cat.ejb2.CATBeanRemoteHome) PortableRemoteObject
+                        .narrow(objRef,
+                                org.xcom.cat.ejb2.CATBeanRemoteHome.class);
+                org.xcom.cat.ejb2.CATBeanRemote remote = home.create();
+                remote.process();
+                System.out.println("############ EJB2 CAT OK !");
+            } else {
+                System.out.println("############ EJB2 CAT not found !");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

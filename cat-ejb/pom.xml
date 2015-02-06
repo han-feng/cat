@@ -12,7 +12,7 @@
 	<artifactId>cat-ejb</artifactId>
 	<packaging>ejb</packaging>
 
-	<name>Classloader Analysis Tool EJB</name>
+	<name>Classloader Analysis Tool EJB 3.0</name>
 	<url>http://maven.apache.org</url>
 
 	<dependencies>

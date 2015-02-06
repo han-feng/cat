@@ -24,7 +24,7 @@
 				<version>2.10</version>
 				<configuration>
 					<displayName>Classloader Analysis Tool EAR</displayName>
-					<defaultLibBundleDir>lib/</defaultLibBundleDir>
+					<defaultLibBundleDir>APP-INF/lib</defaultLibBundleDir>
 					<skinnyWars>true</skinnyWars>
 					<modules>
 						<jarModule>
@@ -37,6 +37,13 @@
 							<groupId>org.xcom</groupId>
 							<artifactId>cat-ejb</artifactId>
 							<bundleFileName>cat-ejb.jar</bundleFileName>
+							<bundleDir>ejb</bundleDir>
+						</ejbModule>
+						<ejbModule>
+							<groupId>org.xcom</groupId>
+							<artifactId>cat-ejb2</artifactId>
+							<bundleFileName>cat-ejb2.jar</bundleFileName>
+							<bundleDir>ejb</bundleDir>
 						</ejbModule>
 						<webModule>
 							<groupId>org.xcom</groupId>
@@ -59,6 +66,12 @@
 		<dependency>
 			<groupId>org.xcom</groupId>
 			<artifactId>cat-ejb</artifactId>
+			<version>${project.version}</version>
+			<type>ejb</type>
+		</dependency>
+		<dependency>
+			<groupId>org.xcom</groupId>
+			<artifactId>cat-ejb2</artifactId>
 			<version>${project.version}</version>
 			<type>ejb</type>
 		</dependency>

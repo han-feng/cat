@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE ejb-jar PUBLIC "-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 2.0//EN" "http://java.sun.com/dtd/ejb-jar_2_0.dtd">
+<ejb-jar>
+	<display-name>Classloader Analysis Tool EJB 2.1</display-name>
+	<enterprise-beans>
+		<session>
+			<display-name>CAT EJB 2.1</display-name>
+			<ejb-name>CATBean2</ejb-name>
+			<home>org.xcom.cat.ejb2.CATBeanRemoteHome</home>
+			<remote>org.xcom.cat.ejb2.CATBeanRemote</remote>
+			<!-- <local-home></local-home> <local></local> -->
+			<ejb-class>org.xcom.cat.ejb2.CATBean</ejb-class>
+			<session-type>Stateless</session-type>
+			<transaction-type>Bean</transaction-type>
+		</session>
+	</enterprise-beans>
+</ejb-jar>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<inforsuite-ejb-jar>
+	<enterprise-beans>
+		<ejb>
+			<ejb-name>CATBean2</ejb-name>
+			<jndi-name>CATBean2</jndi-name>
+		</ejb>
+	</enterprise-beans>
+</inforsuite-ejb-jar>
