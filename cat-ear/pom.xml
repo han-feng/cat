@@ -23,33 +23,35 @@
 				<artifactId>maven-ear-plugin</artifactId>
 				<version>2.10</version>
 				<configuration>
+					<version>5</version>
 					<displayName>Classloader Analysis Tool EAR</displayName>
 					<defaultLibBundleDir>APP-INF/lib</defaultLibBundleDir>
-					<skinnyWars>true</skinnyWars>
 					<modules>
 						<jarModule>
 							<groupId>org.xcom</groupId>
 							<artifactId>cat-core</artifactId>
 							<bundleFileName>cat-core.jar</bundleFileName>
-							<includeInApplicationXml>true</includeInApplicationXml>
 						</jarModule>
 						<ejbModule>
 							<groupId>org.xcom</groupId>
 							<artifactId>cat-ejb</artifactId>
 							<bundleFileName>cat-ejb.jar</bundleFileName>
 							<bundleDir>ejb</bundleDir>
+							<unpack>false</unpack>
 						</ejbModule>
 						<ejbModule>
 							<groupId>org.xcom</groupId>
 							<artifactId>cat-ejb2</artifactId>
 							<bundleFileName>cat-ejb2.jar</bundleFileName>
 							<bundleDir>ejb</bundleDir>
+							<unpack>false</unpack>
 						</ejbModule>
 						<webModule>
 							<groupId>org.xcom</groupId>
 							<artifactId>cat-web</artifactId>
 							<bundleFileName>cat.war</bundleFileName>
 							<contextRoot>cat</contextRoot>
+							<unpack>false</unpack>
 						</webModule>
 					</modules>
 				</configuration>
