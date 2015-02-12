@@ -6,7 +6,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>org.xcom</groupId>
+		<groupId>net.coding.xcom</groupId>
 		<artifactId>cat</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
@@ -15,7 +15,6 @@
 	<packaging>ear</packaging>
 
 	<name>Classloader Analysis Tool EAR</name>
-	<url>http://maven.apache.org</url>
 
 	<build>
 		<plugins>
@@ -28,26 +27,26 @@
 					<defaultLibBundleDir>APP-INF/lib</defaultLibBundleDir>
 					<modules>
 						<jarModule>
-							<groupId>org.xcom</groupId>
+							<groupId>${project.groupId}</groupId>
 							<artifactId>cat-core</artifactId>
 							<bundleFileName>cat-core.jar</bundleFileName>
 						</jarModule>
 						<ejbModule>
-							<groupId>org.xcom</groupId>
+							<groupId>${project.groupId}</groupId>
 							<artifactId>cat-ejb</artifactId>
 							<bundleFileName>cat-ejb.jar</bundleFileName>
 							<bundleDir>ejb</bundleDir>
 							<unpack>false</unpack>
 						</ejbModule>
 						<ejbModule>
-							<groupId>org.xcom</groupId>
+							<groupId>${project.groupId}</groupId>
 							<artifactId>cat-ejb2</artifactId>
 							<bundleFileName>cat-ejb2.jar</bundleFileName>
 							<bundleDir>ejb</bundleDir>
 							<unpack>false</unpack>
 						</ejbModule>
 						<webModule>
-							<groupId>org.xcom</groupId>
+							<groupId>${project.groupId}</groupId>
 							<artifactId>cat-web</artifactId>
 							<bundleFileName>cat.war</bundleFileName>
 							<contextRoot>cat</contextRoot>
@@ -61,24 +60,24 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>org.xcom</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>cat-core</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.xcom</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>cat-ejb</artifactId>
 			<version>${project.version}</version>
 			<type>ejb</type>
 		</dependency>
 		<dependency>
-			<groupId>org.xcom</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>cat-ejb2</artifactId>
 			<version>${project.version}</version>
 			<type>ejb</type>
 		</dependency>
 		<dependency>
-			<groupId>org.xcom</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>cat-web</artifactId>
 			<version>${project.version}</version>
 			<type>war</type>

@@ -6,7 +6,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>org.xcom</groupId>
+		<groupId>net.coding.xcom</groupId>
 		<artifactId>cat</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
@@ -15,7 +15,6 @@
 	<packaging>war</packaging>
 
 	<name>Classloader Analysis Tool Web</name>
-	<url>http://maven.apache.org</url>
 
 	<properties>
 		<webserver.port>8080</webserver.port>
@@ -43,20 +42,20 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.xcom</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>cat-core</artifactId>
 			<version>${project.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.xcom</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>cat-ejb</artifactId>
 			<version>${project.version}</version>
 			<type>ejb-client</type>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.xcom</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>cat-ejb2</artifactId>
 			<version>${project.version}</version>
 			<type>ejb-client</type>
@@ -77,12 +76,12 @@
 				<version>${jetty.version}</version>
 				<dependencies>
 					<dependency>
-						<groupId>org.xcom</groupId>
+						<groupId>${project.groupId}</groupId>
 						<artifactId>cat-core</artifactId>
 						<version>${project.version}</version>
 					</dependency>
 					<dependency>
-						<groupId>org.xcom</groupId>
+						<groupId>${project.groupId}</groupId>
 						<artifactId>cat-ejb</artifactId>
 						<version>${project.version}</version>
 						<type>ejb-client</type>
@@ -109,12 +108,12 @@
 				<version>${tomcat.version}</version>
 				<dependencies>
 					<dependency>
-						<groupId>org.xcom</groupId>
+						<groupId>${project.groupId}</groupId>
 						<artifactId>cat-core</artifactId>
 						<version>${project.version}</version>
 					</dependency>
 					<dependency>
-						<groupId>org.xcom</groupId>
+						<groupId>${project.groupId}</groupId>
 						<artifactId>cat-ejb</artifactId>
 						<version>${project.version}</version>
 						<type>ejb-client</type>
