@@ -15,7 +15,6 @@
 	<packaging>ear</packaging>
 
 	<name>Classloader Analysis Tool EAR</name>
-	<url>http://maven.apache.org</url>
 
 	<build>
 		<plugins>

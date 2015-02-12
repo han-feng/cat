@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
 
@@ -9,23 +10,53 @@
 	<packaging>pom</packaging>
 
 	<name>Classloader Analysis Tool</name>
-	<url>http://maven.apache.org</url>
+	<url>https://github.com/han-feng/cat</url>
+	<description>Java EE Application Classloader Analysis Tool</description>
+
+	<parent>
+		<groupId>org.sonatype.oss</groupId>
+		<artifactId>oss-parent</artifactId>
+		<version>7</version>
+	</parent>
+
+	<licenses>
+		<license>
+			<name>The Apache Software License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+		</license>
+	</licenses>
+
+	<scm>
+		<connection>scm:git:git://github.com/han-feng/cat.git</connection>
+		<developerConnection>scm:git:git@github.com:han-feng/cat.git</developerConnection>
+		<url>https://github.com/han-feng/cat</url>
+	</scm>
+
+	<developers>
+		<developer>
+			<id>han_feng</id>
+			<name>han_feng</name>
+			<email>han_feng@foxmail.com</email>
+		</developer>
+	</developers>
+
+	<issueManagement>
+		<system>GitHub Issues</system>
+		<url>https://github.com/han-feng/cat/issues</url>
+	</issueManagement>
 
 	<modules>
 		<module>cat-core</module>
 		<module>cat-web</module>
 		<module>cat-ear</module>
 		<module>cat-ejb</module>
-    <module>cat-ejb2</module>
-  </modules>
+		<module>cat-ejb2</module>
+	</modules>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
-		<!-- version setting -->
 		<jdk.version>1.6</jdk.version>
 		<junit.version>4.11</junit.version>
-
 	</properties>
 
 	<dependencyManagement>

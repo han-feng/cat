@@ -24,6 +24,8 @@ public class WebLogicExtendAnalyzer implements ExtendAnalyzer {
 
     private static class WebLogicCLNode extends BaseCLNode {
 
+        private static final long serialVersionUID = -4874150438291766904L;
+
         protected WebLogicCLNode(String id, CLNode parent,
                 ClassLoader classloader) {
             super(id, parent, classloader);

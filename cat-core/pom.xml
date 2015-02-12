@@ -12,9 +12,9 @@
 	</parent>
 
 	<artifactId>cat-core</artifactId>
+	<packaging>jar</packaging>
 
 	<name>Classloader Analysis Tool Core</name>
-	<url>http://maven.apache.org</url>
 
 	<dependencies>
 		<dependency>

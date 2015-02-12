@@ -13,7 +13,6 @@
 	<packaging>ejb</packaging>
 
 	<name>Classloader Analysis Tool EJB 3.0</name>
-	<url>http://maven.apache.org</url>
 
 	<dependencies>
 		<dependency>
