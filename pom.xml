@@ -5,7 +5,7 @@
 
 	<groupId>net.coding.xcom</groupId>
 	<artifactId>cat</artifactId>
-	<version>0.0.2-SNAPSHOT</version>
+	<version>1.0</version>
 	<packaging>pom</packaging>
 
 	<name>Classloader Analysis Tool</name>
