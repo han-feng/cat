@@ -29,7 +29,7 @@ public class ClassloaderAnalysisTool {
     /**
      * 对当前线程上下文类加载器进行分析
      * 
-     * @return
+     * @return 当前线程上下文节点
      */
     public static CLNode process() {
         return process(Thread.currentThread().getContextClassLoader());
@@ -40,7 +40,7 @@ public class ClassloaderAnalysisTool {
      * 
      * @param tag
      *            标签
-     * @return
+     * @return 当前线程上下文节点
      */
     public static CLNode process(String tag) {
         return process(Thread.currentThread().getContextClassLoader(), tag);
@@ -51,7 +51,7 @@ public class ClassloaderAnalysisTool {
      * 
      * @param classloader
      *            待分析的类加载器
-     * @return
+     * @return 节点
      */
     public static CLNode process(ClassLoader classloader) {
         return process(classloader, null);
@@ -64,7 +64,7 @@ public class ClassloaderAnalysisTool {
      *            待分析的类加载器
      * @param tag
      *            标签
-     * @return
+     * @return 节点
      */
     public static CLNode process(ClassLoader classloader, String tag) {
         CLNode node = CL_TO_NODE.get(classloader);
@@ -117,7 +117,7 @@ public class ClassloaderAnalysisTool {
     /**
      * 获取根（无父）节点信息
      * 
-     * @return
+     * @return 根节点集合
      */
     public static Collection<CLNode> getRoots() {
         return Collections.unmodifiableCollection(ROOTS);
@@ -127,7 +127,7 @@ public class ClassloaderAnalysisTool {
      * 获取指定标识的节点信息
      * 
      * @param id
-     * @return
+     * @return 节点
      */
     public static CLNode getCLNode(String id) {
         return NODE_MAP.get(id);
