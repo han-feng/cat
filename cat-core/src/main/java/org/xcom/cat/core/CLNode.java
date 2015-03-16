@@ -53,11 +53,18 @@ public interface CLNode {
     public boolean isRoot();
 
     /**
+     * 是否叶子节点
+     * 
+     * @return
+     */
+    public boolean isLeaf();
+
+    /**
      * 获取根节点
      * 
      * @return
      */
-    public CLNode getRoot();
+    public CLNode getRootNode();
 
     /**
      * 获取子节点

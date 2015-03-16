@@ -82,11 +82,11 @@ public class BaseCLNode implements CLNode, Serializable {
         return parent;
     }
 
-    public CLNode getRoot() {
+    public CLNode getRootNode() {
         if (isRoot())
             return this;
         else
-            return getParent().getRoot();
+            return getParent().getRootNode();
     }
 
     @Override
@@ -100,6 +100,11 @@ public class BaseCLNode implements CLNode, Serializable {
 
     public boolean isRoot() {
         return parent == null;
+    }
+
+    @Override
+    public boolean isLeaf() {
+        return children.size() == 0;
     }
 
 }
