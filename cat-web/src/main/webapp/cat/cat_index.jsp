@@ -30,6 +30,8 @@
 				+ node.getId() + "')\">详细信息</a>");
 		out.print("&nbsp;<a href=\"javascript:findResource('" + node.getId()
 				+ "')\">查找资源</a>");
+		out.print("&nbsp;<a href=\"javascript:findDupResource('" + node.getId()
+				+ "')\">探测重复资源</a>");
 		out.println("<div id=\"node_urls_" + node.getId()
 				+ "\" style=\"display: none;\">" + node.getDescription());
 		out.println("<ol>");
@@ -94,6 +96,9 @@ td {
 	}
 	function findResource(nodeId) {
 		window.open("findResource.jsp?nodeId=" + nodeId);
+	}
+	function findDupResource(nodeId) {
+		window.open("findDupResource.jsp?nodeId=" + nodeId);
 	}
 </script>
 </head>
