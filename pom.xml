@@ -26,8 +26,8 @@
 	</licenses>
 
 	<scm>
-		<connection>scm:git:https://coding.net/xcom/cat.git</connection>
-		<developerConnection>scm:git:https://coding.net/xcom/cat.git</developerConnection>
+		<connection>scm:git:https://git.coding.net/xcom/cat.git</connection>
+		<developerConnection>scm:git:https://git.coding.net/xcom/cat.git</developerConnection>
 		<url>https://coding.net/u/xcom/p/cat/git</url>
 	</scm>
 
