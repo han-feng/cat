@@ -1,6 +1,7 @@
 package org.xcom.cat.core;
 
 import java.io.Serializable;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
@@ -39,7 +40,10 @@ public class BaseCLNode implements CLNode, Serializable {
             int len = urlObjs.length;
 
             for (int i = 0; i < len; i++) {
-                classpath.add(urlObjs[i].toString());
+                try {
+                    classpath.add(urlObjs[i].toURI().getPath());
+                } catch (URISyntaxException e) {
+                }
             }
         }
     }

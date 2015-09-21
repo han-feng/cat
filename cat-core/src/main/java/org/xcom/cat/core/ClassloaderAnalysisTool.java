@@ -1,10 +1,12 @@
 package org.xcom.cat.core;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
-import java.net.URL;
+import java.io.InputStream;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -35,10 +37,13 @@ public class ClassloaderAnalysisTool {
     private static final Map<ClassLoader, CLNode> CL_TO_NODE = new ConcurrentHashMap<ClassLoader, CLNode>();
     private static final Set<CLNode> ROOTS = new HashSet<CLNode>();
 
-    private static final Set<String> ignoreResourcePaths = new HashSet<String>();
+    public static final Set<String> DEFAULT_IGNORE_PATH = new HashSet<String>();
 
     static {
-        ignoreResourcePaths.add("META-INF/MANIFEST.MF");
+        DEFAULT_IGNORE_PATH.add("META-INF/MANIFEST.MF");
+        DEFAULT_IGNORE_PATH.add("META-INF/NOTICE");
+        DEFAULT_IGNORE_PATH.add("META-INF/LICENSE");
+        DEFAULT_IGNORE_PATH.add("META-INF/DEPENDENCIES");
         process(ClassloaderAnalysisTool.class.getClassLoader(), "CAT-Core");
     }
 
@@ -149,30 +154,29 @@ public class ClassloaderAnalysisTool {
         return NODE_MAP.get(id);
     }
 
+    public static Map<String, List<ResourceInfo>> findDupResouces(String nodeId) {
+        return findDupResouces(nodeId, DEFAULT_IGNORE_PATH);
+    }
+
     /**
      * 查找一个节点中的重复资源
      * 
      * @param nodeId
-     * @return
+     * @return Map
      */
-    public static Map<String, List<String>> findDupResouces(String nodeId) {
+    public static Map<String, List<ResourceInfo>> findDupResouces(
+            String nodeId, Set<String> ignoreResourcePaths) {
         Map<String, List<String>> result = new LinkedHashMap<String, List<String>>();
         CLNode node = getCLNode(nodeId);
         String[] classpaths = node.getClasspath();
         // 目前采用File方式实现，能支持大多数场景，但理论上有不适应的情况需要持续完善。
         for (String resPackage : classpaths) {
-            File pack = null;
-            try {
-                pack = new File(new URL(resPackage).toURI());
-            } catch (MalformedURLException e1) {
-                e1.printStackTrace();
-            } catch (URISyntaxException e1) {
-                e1.printStackTrace();
+            while (resPackage.endsWith("/")) {
+                resPackage = resPackage.substring(0, resPackage.length() - 1);
             }
-            if (pack == null)
-                continue;
+            File pack = new File(resPackage);
             if (pack.isDirectory()) {
-                getAllFile(null, pack, result, resPackage);
+                getAllFile(null, pack, result, resPackage, ignoreResourcePaths);
             } else {
                 JarFile jar = null;
                 try {
@@ -182,7 +186,8 @@ public class ClassloaderAnalysisTool {
                         JarEntry entry = enumeration.nextElement();
                         String name = entry.getName();
                         if (!name.endsWith("/"))
-                            addToDupResMap(result, name, resPackage);
+                            addToDupResMap(result, name, resPackage,
+                                    ignoreResourcePaths);
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -198,18 +203,80 @@ public class ClassloaderAnalysisTool {
                 }
             }
         }
-        Map<String, List<String>> result2 = new HashMap<String, List<String>>();
+        Map<String, List<ResourceInfo>> result2 = new HashMap<String, List<ResourceInfo>>();
         for (Entry<String, List<String>> entry : result.entrySet()) {
-            if (entry.getValue().size() > 1)
-                result2.put(entry.getKey(), entry.getValue());
+            if (entry.getValue().size() > 1) {
+                String name = entry.getKey();
+                List<ResourceInfo> infos = new ArrayList<ResourceInfo>();
+                for (String resPackage : entry.getValue()) {
+                    long size = 0;
+                    String md5 = "";
+                    InputStream in = null;
+                    File pack = new File(resPackage);
+                    if (pack.isDirectory()) {
+                        File res = new File(resPackage + "/" + name);
+                        size = res.length();
+                        try {
+                            in = new FileInputStream(res);
+                            md5 = md5(in);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        } finally {
+                            if (in != null) {
+                                try {
+                                    in.close();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+                    } else {
+                        JarFile jar = null;
+                        try {
+                            jar = new JarFile(pack);
+                            JarEntry jarEntry = jar.getJarEntry(name);
+                            size = jarEntry.getSize();
+                            in = jar.getInputStream(jarEntry);
+                            md5 = md5(in);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        } finally {
+                            if (jar != null) {
+                                try {
+                                    jar.close();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+                    }
+                    ResourceInfo info = new ResourceInfo(name, resPackage,
+                            size, md5);
+                    infos.add(info);
+                }
+                result2.put(entry.getKey(), infos);
+            }
         }
         result.clear();
         result = null;
+
         return result2;
     }
 
+    private static String md5(InputStream in) throws NoSuchAlgorithmException,
+            IOException {
+        MessageDigest md5 = MessageDigest.getInstance("MD5");
+        byte[] buffer = new byte[8196];
+        int length;
+        while ((length = in.read(buffer)) != -1) {
+            md5.update(buffer, 0, length);
+        }
+        BigInteger bi = new BigInteger(1, md5.digest());
+        return bi.toString(16);
+    }
+
     private static void addToDupResMap(Map<String, List<String>> dupResMap,
-            String name, String packName) {
+            String name, String packName, Set<String> ignoreResourcePaths) {
         if (ignoreResourcePaths.contains(name))
             return;
         List<String> packs = dupResMap.get(name);
@@ -221,31 +288,67 @@ public class ClassloaderAnalysisTool {
     }
 
     private static void getAllFile(String contextPath, File dir,
-            Map<String, List<String>> result, String resPackage) {
+            Map<String, List<String>> result, String resPackage,
+            Set<String> ignoreResourcePaths) {
         if (contextPath == null) {
             contextPath = "";
         }
         for (File file : dir.listFiles()) {
             if (file.isDirectory()) {
                 getAllFile(contextPath + file.getName() + "/", file, result,
-                        resPackage);
+                        resPackage, ignoreResourcePaths);
             } else {
-                addToDupResMap(result, contextPath + file.getName(), resPackage);
+                addToDupResMap(result, contextPath + file.getName(),
+                        resPackage, ignoreResourcePaths);
             }
+        }
+    }
+
+    public static class ResourceInfo {
+        private String name;
+        private String parent;
+        private long size;
+        private String md5;
+
+        ResourceInfo(String name, String parent, long size, String md5) {
+            this.name = name;
+            this.parent = parent;
+            this.size = size;
+            this.md5 = md5;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public String getParent() {
+            return parent;
+        }
+
+        public long getSize() {
+            return size;
+        }
+
+        public String getMd5() {
+            return md5;
+        }
+
+        public String toString() {
+            return name + "\t" + parent + "(" + size + ")" + md5;
         }
     }
 
     public static void main(String[] args) {
-        Map<String, List<String>> result = findDupResouces(getRoots()
+        Map<String, List<ResourceInfo>> result = findDupResouces(getRoots()
                 .iterator().next().getId());
-        for (Entry<String, List<String>> entry : result.entrySet()) {
+        for (Entry<String, List<ResourceInfo>> entry : result.entrySet()) {
             String res = entry.getKey();
             System.out.println(res);
-            for (String path : entry.getValue()) {
-                System.out.println("\t" + path);
+            for (ResourceInfo info : entry.getValue()) {
+                System.out.println("\t" + info);
             }
             System.out.println();
         }
-
     }
+
 }
