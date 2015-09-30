@@ -1,6 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<%@page import="org.xcom.cat.core.ClassloaderAnalysisTool.ResourceInfo"%>
-<%@page import="java.util.*,java.net.URL,org.xcom.cat.core.*"
+<%@page
+	import="java.util.*,java.net.URL,org.xcom.cat.core.*,org.xcom.cat.core.ClassloaderAnalysisTool.*"
 	language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%
@@ -53,8 +53,8 @@ th, td {
 <body>
 	<div>
 		<h3>当前 ClassLoader</h3>
-		<strong><%=classLoader.getClass().getName()%></strong><br>
-		<%=classLoader.toString()%>
+		<strong><%=classLoader.getClass().getName()%></strong>
+		<pre><%=classLoader.toString()%></pre>
 	</div>
 	<div>
 		<h3>重复资源</h3>
@@ -66,32 +66,25 @@ th, td {
 				<th>位置</th>
 			</tr>
 			<%
-			    Map dupRes = ClassloaderAnalysisTool.findDupResouces(nodeId);
-			    for (Iterator iter = dupRes.entrySet().iterator(); iter.hasNext();) {
-			        Map.Entry entry = (Map.Entry) iter.next();
+			    List dupRes = ClassloaderAnalysisTool.findDupResouces(nodeId);
+			    for (Iterator iter = dupRes.iterator(); iter.hasNext();) {
+			        ResourceInfos infos = (ResourceInfos) iter.next();
+			        String resName = infos.getName();
+			        if (!infos.isSame()) {
+			            resName = "<stong style='color:red'>" + resName
+			                    + "</stong>";
+			        }
 			%>
 			<tr>
-				<th colspan="3"><%=entry.getKey()%></th>
+				<th colspan="3"><%=resName%></th>
 			</tr>
 			<%
-			    List list = (List) entry.getValue();
-			        ResourceInfo info = (ResourceInfo) list.get(0);
-			        long s0 = info.getSize();
-			        String m0 = info.getMd5();
-			        for (int i = 0; i < list.size(); i++) {
-			            info = (ResourceInfo) list.get(i);
+			    for (Iterator iter2 = infos.iterator(); iter2.hasNext();) {
+			            ResourceInfo info = (ResourceInfo) iter2.next();
 			            long size = info.getSize();
 			            String md5 = info.getMd5();
-			            if (size != s0 || !m0.equals(md5)) {
-			%><tr style="color: red">
-				<%
-				    } else {
-				%>
-			
+			%>
 			<tr>
-				<%
-				    }
-				%>
 				<td><%=size%></td>
 				<td><%=md5%></td>
 				<td><%=info.getParent()%></td>

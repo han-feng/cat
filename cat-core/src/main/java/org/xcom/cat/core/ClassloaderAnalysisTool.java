@@ -11,9 +11,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -154,7 +155,7 @@ public class ClassloaderAnalysisTool {
         return NODE_MAP.get(id);
     }
 
-    public static Map<String, List<ResourceInfo>> findDupResouces(String nodeId) {
+    public static List<ResourceInfos> findDupResouces(String nodeId) {
         return findDupResouces(nodeId, DEFAULT_IGNORE_PATH);
     }
 
@@ -164,10 +165,14 @@ public class ClassloaderAnalysisTool {
      * @param nodeId
      * @return Map
      */
-    public static Map<String, List<ResourceInfo>> findDupResouces(
-            String nodeId, Set<String> ignoreResourcePaths) {
+    public static List<ResourceInfos> findDupResouces(String nodeId,
+            Set<String> ignoreResourcePaths) {
         Map<String, List<String>> result = new LinkedHashMap<String, List<String>>();
         CLNode node = getCLNode(nodeId);
+        if (node == null) {
+            throw new IllegalArgumentException("node not found (id=" + nodeId
+                    + ")");
+        }
         String[] classpaths = node.getClasspath();
         // 目前采用File方式实现，能支持大多数场景，但理论上有不适应的情况需要持续完善。
         for (String resPackage : classpaths) {
@@ -203,11 +208,12 @@ public class ClassloaderAnalysisTool {
                 }
             }
         }
-        Map<String, List<ResourceInfo>> result2 = new HashMap<String, List<ResourceInfo>>();
+        // 只有存在重复资源的才进行更详细的比较
+        List<ResourceInfos> result2 = new LinkedList<ResourceInfos>();
         for (Entry<String, List<String>> entry : result.entrySet()) {
             if (entry.getValue().size() > 1) {
                 String name = entry.getKey();
-                List<ResourceInfo> infos = new ArrayList<ResourceInfo>();
+                ResourceInfos infos = new ResourceInfos();
                 for (String resPackage : entry.getValue()) {
                     long size = 0;
                     String md5 = "";
@@ -254,7 +260,11 @@ public class ClassloaderAnalysisTool {
                             size, md5);
                     infos.add(info);
                 }
-                result2.put(entry.getKey(), infos);
+                if (!infos.isSame()) {
+                    result2.add(0, infos);
+                } else {
+                    result2.add(infos);
+                }
             }
         }
         result.clear();
@@ -304,6 +314,46 @@ public class ClassloaderAnalysisTool {
         }
     }
 
+    public static class ResourceInfos implements Iterable<ResourceInfo> {
+
+        private List<ResourceInfo> list = new ArrayList<ResourceInfo>();
+        private String name;
+        private boolean same = true;
+        private boolean first = true;
+        private long size;
+        private String md5;
+
+        public String getName() {
+            return name;
+        }
+
+        public boolean isSame() {
+            return same;
+        }
+
+        void add(ResourceInfo resourceInfo) {
+            list.add(resourceInfo);
+            if (first) {
+                name = resourceInfo.getName();
+                size = resourceInfo.getSize();
+                md5 = resourceInfo.getMd5();
+                first = false;
+                return;
+            }
+            if (!same)
+                return;
+            if (size != resourceInfo.getSize()
+                    || !md5.equals(resourceInfo.getMd5())) {
+                same = false;
+            }
+            return;
+        }
+
+        public Iterator<ResourceInfo> iterator() {
+            return list.iterator();
+        }
+    }
+
     public static class ResourceInfo {
         private String name;
         private String parent;
@@ -334,17 +384,18 @@ public class ClassloaderAnalysisTool {
         }
 
         public String toString() {
-            return name + "\t" + parent + "(" + size + ")" + md5;
+            return name + "\t" + parent + "\t" + size + "\t" + md5;
         }
     }
 
     public static void main(String[] args) {
-        Map<String, List<ResourceInfo>> result = findDupResouces(getRoots()
-                .iterator().next().getId());
-        for (Entry<String, List<ResourceInfo>> entry : result.entrySet()) {
-            String res = entry.getKey();
+        List<ResourceInfos> result = findDupResouces(getRoots().iterator()
+                .next().getId());
+        for (ResourceInfos infos : result) {
+            String res = infos.getName();
             System.out.println(res);
-            for (ResourceInfo info : entry.getValue()) {
+            System.out.println("same : " + infos.isSame());
+            for (ResourceInfo info : infos) {
                 System.out.println("\t" + info);
             }
             System.out.println();

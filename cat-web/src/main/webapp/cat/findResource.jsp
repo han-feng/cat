@@ -42,8 +42,8 @@ li {
 <body>
 	<div>
 		<h3>当前 ClassLoader</h3>
-		<strong><%=classLoader.getClass().getName()%></strong><br>
-		<%=classLoader.toString()%>
+		<strong><%=classLoader.getClass().getName()%></strong>
+		<pre><%=classLoader.toString()%></pre>
 	</div>
 	<div>
 		<form method="post">
