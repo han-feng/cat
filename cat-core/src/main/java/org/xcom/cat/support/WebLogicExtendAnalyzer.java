@@ -38,7 +38,7 @@ public class WebLogicExtendAnalyzer implements ExtendAnalyzer {
                 for (String url : urls) {
                     url = url.trim();
                     if (!url.equals(""))
-                        this.classpath.add(url);
+                        this.classpath.add(url.replaceAll("\\\\", "\\/"));
                 }
             } catch (Exception e) {
                 e.printStackTrace();

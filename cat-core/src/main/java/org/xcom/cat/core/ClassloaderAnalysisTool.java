@@ -45,6 +45,9 @@ public class ClassloaderAnalysisTool {
         DEFAULT_IGNORE_PATH.add("META-INF/NOTICE");
         DEFAULT_IGNORE_PATH.add("META-INF/LICENSE");
         DEFAULT_IGNORE_PATH.add("META-INF/DEPENDENCIES");
+        DEFAULT_IGNORE_PATH.add("META-INF/NOTICE.txt");
+        DEFAULT_IGNORE_PATH.add("META-INF/LICENSE.txt");
+        DEFAULT_IGNORE_PATH.add("META-INF/DEPENDENCIES.txt");
         process(ClassloaderAnalysisTool.class.getClassLoader(), "CAT-Core");
     }
 
@@ -105,8 +108,8 @@ public class ClassloaderAnalysisTool {
         String id = Integer.toString(MAX_ID++);
         // 使用扩展分析器进行分析
         ServiceLoader<ExtendAnalyzer> serviceloader = ServiceLoader.load(
-                ExtendAnalyzer.class, Thread.currentThread()
-                        .getContextClassLoader());
+                ExtendAnalyzer.class,
+                Thread.currentThread().getContextClassLoader());
         for (ExtendAnalyzer analyzer : serviceloader) {
             node = analyzer.process(id, parent, classloader);
             if (node != null)
@@ -170,8 +173,8 @@ public class ClassloaderAnalysisTool {
         Map<String, List<String>> result = new LinkedHashMap<String, List<String>>();
         CLNode node = getCLNode(nodeId);
         if (node == null) {
-            throw new IllegalArgumentException("node not found (id=" + nodeId
-                    + ")");
+            throw new IllegalArgumentException(
+                    "node not found (id=" + nodeId + ")");
         }
         String[] classpaths = node.getClasspath();
         // 目前采用File方式实现，能支持大多数场景，但理论上有不适应的情况需要持续完善。
@@ -218,6 +221,11 @@ public class ClassloaderAnalysisTool {
                     long size = 0;
                     String md5 = "";
                     InputStream in = null;
+
+                    // valid
+                    boolean valid = node.getClassLoader().getResource(name)
+                            .toString().contains(resPackage);
+
                     File pack = new File(resPackage);
                     if (pack.isDirectory()) {
                         File res = new File(resPackage + "/" + name);
@@ -256,8 +264,8 @@ public class ClassloaderAnalysisTool {
                             }
                         }
                     }
-                    ResourceInfo info = new ResourceInfo(name, resPackage,
-                            size, md5);
+                    ResourceInfo info = new ResourceInfo(name, resPackage, size,
+                            valid, md5);
                     infos.add(info);
                 }
                 if (!infos.isSame()) {
@@ -273,8 +281,8 @@ public class ClassloaderAnalysisTool {
         return result2;
     }
 
-    private static String md5(InputStream in) throws NoSuchAlgorithmException,
-            IOException {
+    private static String md5(InputStream in)
+            throws NoSuchAlgorithmException, IOException {
         MessageDigest md5 = MessageDigest.getInstance("MD5");
         byte[] buffer = new byte[8196];
         int length;
@@ -308,8 +316,8 @@ public class ClassloaderAnalysisTool {
                 getAllFile(contextPath + file.getName() + "/", file, result,
                         resPackage, ignoreResourcePaths);
             } else {
-                addToDupResMap(result, contextPath + file.getName(),
-                        resPackage, ignoreResourcePaths);
+                addToDupResMap(result, contextPath + file.getName(), resPackage,
+                        ignoreResourcePaths);
             }
         }
     }
@@ -359,11 +367,14 @@ public class ClassloaderAnalysisTool {
         private String parent;
         private long size;
         private String md5;
+        private boolean valid;
 
-        ResourceInfo(String name, String parent, long size, String md5) {
+        ResourceInfo(String name, String parent, long size, boolean valid,
+                String md5) {
             this.name = name;
             this.parent = parent;
             this.size = size;
+            this.valid = valid;
             this.md5 = md5;
         }
 
@@ -379,18 +390,23 @@ public class ClassloaderAnalysisTool {
             return size;
         }
 
+        public boolean isValid() {
+            return valid;
+        }
+
         public String getMd5() {
             return md5;
         }
 
         public String toString() {
-            return name + "\t" + parent + "\t" + size + "\t" + md5;
+            return name + "\t" + parent + "\t" + size + "\t" + valid + "\t"
+                    + md5;
         }
     }
 
     public static void main(String[] args) {
-        List<ResourceInfos> result = findDupResouces(getRoots().iterator()
-                .next().getId());
+        List<ResourceInfos> result = findDupResouces(
+                getRoots().iterator().next().getId());
         for (ResourceInfos infos : result) {
             String res = infos.getName();
             System.out.println(res);

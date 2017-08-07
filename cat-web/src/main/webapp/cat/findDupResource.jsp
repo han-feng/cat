@@ -63,6 +63,7 @@ th, td {
 			<tr>
 				<th>大小</th>
 				<th>md5</th>
+				<th></th>
 				<th>位置</th>
 			</tr>
 			<%
@@ -76,7 +77,7 @@ th, td {
 			        }
 			%>
 			<tr>
-				<th colspan="3"><%=resName%></th>
+				<th colspan="4"><%=resName%></th>
 			</tr>
 			<%
 			    for (Iterator iter2 = infos.iterator(); iter2.hasNext();) {
@@ -87,6 +88,13 @@ th, td {
 			<tr>
 				<td><%=size%></td>
 				<td><%=md5%></td>
+				<td>
+					<%
+					    if (info.isValid()) {
+					%><label>有效</label> <%
+     }
+ %>
+				</td>
 				<td><%=info.getParent()%></td>
 			</tr>
 			<%
