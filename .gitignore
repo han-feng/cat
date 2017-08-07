@@ -14,3 +14,8 @@ target/
 # log
 *.log
 *.log.*
+
+# VSCode
+.vscode/
+
+cat-osgi/bin/

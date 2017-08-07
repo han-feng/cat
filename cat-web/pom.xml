@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>net.coding.xcom</groupId>
 		<artifactId>cat</artifactId>
-		<version>1.3-SNAPSHOT</version>
+		<version>1.3.0-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>cat-web</artifactId>

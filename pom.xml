@@ -5,7 +5,7 @@
 
 	<groupId>net.coding.xcom</groupId>
 	<artifactId>cat</artifactId>
-	<version>1.3-SNAPSHOT</version>
+	<version>1.3.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>Classloader Analysis Tool</name>
@@ -55,6 +55,7 @@
 		<module>cat-ear</module>
 		<module>cat-ejb</module>
 		<module>cat-ejb2</module>
+		<module>cat-osgi</module>
 	</modules>
 
 	<properties>
