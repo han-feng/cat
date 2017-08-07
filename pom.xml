@@ -55,6 +55,7 @@
 		<module>cat-ear</module>
 		<module>cat-ejb</module>
 		<module>cat-ejb2</module>
+		<module>cat-osgi</module>
 	</modules>
 
 	<properties>
